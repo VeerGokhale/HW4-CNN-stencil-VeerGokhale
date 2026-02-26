@@ -1,0 +1,6 @@
+data/
+data
+
+pycache/
+*.pyc
+
