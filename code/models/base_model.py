@@ -8,7 +8,7 @@ class CifarModel(nn.Module, ABC):
         super(CifarModel, self).__init__()
         self.loss_list = []
         # TODO: Initialize loss function
-        self.loss_func = None
+        self.loss_func = nn.CrossEntropyLoss()
 
     @abstractmethod
     def forward(self, inputs):
@@ -25,7 +25,10 @@ class CifarModel(nn.Module, ABC):
         :return: the loss of the model as a Tensor
         """
         # TODO: Implement the loss function
-        raise NotImplementedError("Method not implemented")
+
+        loss = self.loss_func(logits, labels)
+
+        return loss
 
     def accuracy(self, logits, labels):
         """
@@ -35,5 +38,7 @@ class CifarModel(nn.Module, ABC):
         :param labels: tensor of size (num_labels,) containing class indices
         :return: the accuracy of the model as a Tensor
         """
-        # TODO: Implement the accuracy function
-        raise NotImplementedError("Method not implemented")
+        preds = torch.argmax(logits, dim=1)
+        correct = preds == labels
+        acc = torch.mean(correct.to(torch.float32))
+        return acc

@@ -74,9 +74,18 @@ def main():
     # TODO: main() pt 1
     # Load your testing and training data using the get_data function
 
+    class_idxs = [3, 5]
+    x_train, y_train = get_data(AUTOGRADER_TRAIN_FILE, class_idxs)
+    x_test, y_test = get_data(AUTOGRADER_TEST_FILE, class_idxs)
+
     # Initialize model
     # TODO: main() pt 2
     # Initialize your model and optimizer
+
+    model = MLP(class_idxs)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+
+
 
     # TODO: main() pt 3
     # Train your model for multiple epochs

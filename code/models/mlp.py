@@ -21,14 +21,21 @@ class MLP(CifarModel):
         super(MLP, self).__init__()
 
         # Initialize all hyperparameters
-        self.input_width = ???
-        self.input_height = ???
-        self.image_channels = ???
+        self.input_width = 32
+        self.input_height = 32
+        self.image_channels = 3
         self.num_classes = len(class_idxs)
         self.hidden_layer_size = 128 # feel free to change this ;)
         self.batch_size = 64 # feel free to change this ;)
 
         # TODO: Initialize your layers here
+
+        self.input_layer = nn.Linear(self.input_width * self.input_height * self.image_channels, self.hidden_layer_size, bias = True)
+        self.hidden_layer = nn.ReLU()
+        self.output_layer = nn.Linear(self.hidden_layer_size, self.num_classes, bias = True)
+
+
+
 
     def forward(self, inputs):
         """
@@ -37,4 +44,10 @@ class MLP(CifarModel):
         :return: logits, a matrix of shape (num_inputs, num_classes)
         """
         # TODO: Implement your forward pass here
-        raise NotImplementedError("Implement me!")
+        x = torch.reshape(inputs, (inputs.shape[0], -1)) #reshaping
+        x1 = self.input_layer(x)
+        x2 = self.hidden_layer(x1)
+        x3 = self.output_layer(x2)
+        return x3
+    
+    
