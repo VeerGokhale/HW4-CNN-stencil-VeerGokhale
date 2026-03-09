@@ -51,9 +51,28 @@ def get_data(file_path, classes):
     inputs: np.ndarray = np.array(unpickled_file[b'data'])
     labels: np.ndarray = np.array(unpickled_file[b'labels'])
 
-    # TODO: Extract only the data that matches the corresponding classes we want
-    raise NotImplementedError("Implement me!")
+    idx_dict = {}
+    for i,e in enumerate(classes):
+        idx_dict[e] = i
 
+
+    # TODO: Extract only the data that matches the corresponding classes we want
+
+    mask = np.isin(labels, classes)
+    labels = labels[mask]
+
+    for i,e in enumerate(labels):
+        labels[i] = idx_dict[e]
+
+    inputs = inputs[mask]
+
+    inputs = inputs.astype(np.float32) / 255.0
+    inputs = inputs.reshape(-1, 3, 32, 32)
+
+    inputs = torch.tensor(inputs, dtype=torch.float32)
+    labels = torch.tensor(labels, dtype=torch.long)
+    
+    return inputs, labels
 
 if __name__ == "__main__":
     get_data("./data/train", [0, 1])
