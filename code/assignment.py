@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from matplotlib import pyplot as plt
 from preprocess import get_data, get_next_batch
 from visualize import visualize_loss, visualize_results
-from models.cnn import CNN
+#from models.cnn import CNN
 from models.mlp import MLP
 
 import os
@@ -112,8 +112,8 @@ def main():
     # Load your testing and training data using the get_data function
 
     class_idxs = [3, 5]
-    x_train, y_train = get_data(AUTOGRADER_TRAIN_FILE, class_idxs)
-    x_test, y_test = get_data(AUTOGRADER_TEST_FILE, class_idxs)
+    x_train, y_train = get_data(LOCAL_TRAIN_FILE, class_idxs)
+    x_test, y_test = get_data(LOCAL_TEST_FILE, class_idxs)
 
     # Initialize model
     # TODO: main() pt 2
