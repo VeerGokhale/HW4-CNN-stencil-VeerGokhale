@@ -52,7 +52,7 @@ def get_data(file_path, classes):
     labels: np.ndarray = np.array(unpickled_file[b'labels'])
 
     idx_dict = {}
-    for i,e in enumerate(classes):
+    for i,e in enumerate(sorted(classes)):
         idx_dict[e] = i
 
 
