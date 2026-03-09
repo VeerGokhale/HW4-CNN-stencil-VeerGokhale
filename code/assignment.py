@@ -25,7 +25,7 @@ def train(model, optimizer, train_inputs, train_labels):
     :param train_labels: train labels, shape (num_labels,)
     :return: average training accuracy for this epoch
     '''
-    num_batches = ???
+    num_batches = 10
 
     with tqdm(range(num_batches), desc="  train", unit="batch", leave=False,
               bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]{postfix}") as pbar:
