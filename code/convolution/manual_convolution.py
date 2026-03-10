@@ -33,6 +33,7 @@ class ManualConv2d(nn.Module):
         self.padding = padding
         self.use_bias = use_bias
         self.bias = None
+        self.trainable = trainable
 
         # NOTE: DO NOT EDIT
         self._initalize_weights()
@@ -97,5 +98,36 @@ class ManualConv2d(nn.Module):
             raise ValueError(f"Input channels is {input_in_channels} "
                            f"but filter expects {filter_in_channels}")
 
-        # TODO: Implement the convolution operation
-        raise NotImplementedError("Implement me!")
+            # Pad input on height and width dimensions
+        if self.padding > 0:
+            padded_inputs = F.pad(inputs, (self.padding, self.padding, self.padding, self.padding))
+        else:
+            padded_inputs = inputs
+
+        _, _, padded_height, padded_width = padded_inputs.shape
+
+        out_height = (padded_height - filter_height) // self.stride + 1
+        out_width = (padded_width - filter_width) // self.stride + 1
+
+        outputs = torch.zeros(
+            (num_examples, filter_out_channels, out_height, out_width),
+            dtype=inputs.dtype,
+            device=inputs.device
+        )
+
+        for n in range(num_examples):
+            for oc in range(filter_out_channels):
+                for i in range(out_height):
+                    for j in range(out_width):
+                        h_start = i * self.stride
+                        h_end = h_start + filter_height
+                        w_start = j * self.stride
+                        w_end = w_start + filter_width
+
+                        patch = padded_inputs[n, :, h_start:h_end, w_start:w_end]
+                        outputs[n, oc, i, j] = torch.sum(patch * self.filters[oc])
+
+                        if self.use_bias:
+                            outputs[n, oc, i, j] += self.bias[oc]
+
+        return outputs
