@@ -32,7 +32,7 @@ class ManualConv2d(nn.Module):
         self.stride = stride
         self.padding = padding
         self.use_bias = use_bias
-        self.bias = None
+        #self.bias = None
         self.trainable = trainable
 
         # NOTE: DO NOT EDIT

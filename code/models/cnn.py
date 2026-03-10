@@ -39,6 +39,16 @@ class CNN(CifarModel):
             padding=1
         )
 
+        self.manual_conv1 = ManualConv2d(
+            in_channels=3,
+            out_channels=16,
+            kernel_size=3,
+            stride=1,
+            padding=1,
+            use_bias=True,
+            trainable=False
+            )
+
         # Conv2
         self.conv2 = nn.Conv2d(
             in_channels=16,
@@ -63,7 +73,12 @@ class CNN(CifarModel):
         :return: logits, a matrix of shape (num_inputs, num_classes)
         """
 
-        x = self.conv1(inputs)      #(N, 3, 32, 32) --> (N, 16, 32, 32)
+        if self.training:
+            x = self.conv1(inputs)
+        else:
+            self.manual_conv1.set_weights(self.conv1.weight, self.conv1.bias)
+            x = self.manual_conv1(inputs)
+
         x = self.relu(x)
         x = self.pool(x)            #(N, 16, 16, 16)
 
