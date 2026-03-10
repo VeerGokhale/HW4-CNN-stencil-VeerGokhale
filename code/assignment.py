@@ -68,7 +68,7 @@ def test(model, test_inputs, test_labels):
     """
     model.eval()
 
-    num_batches = test_inputs.shape[0] // model.batch_size
+    num_batches = (test_inputs.shape[0] + model.batch_size - 1) // model.batch_size
     total_acc = 0.0
     all_preds = []
 
