@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from matplotlib import pyplot as plt
 from preprocess import get_data, get_next_batch
 from visualize import visualize_loss, visualize_results
-#from models.cnn import CNN
+from models.cnn import CNN
 from models.mlp import MLP
 
 import os
@@ -119,10 +119,8 @@ def main():
     # TODO: main() pt 2
     # Initialize your model and optimizer
 
-    model = MLP(class_idxs)
+    model = CNN(class_idxs)
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
-
-
 
     # TODO: main() pt 3
     # Train your model for multiple epochs
@@ -143,10 +141,7 @@ def main():
     #   depending on which model you are using
 
     pred_classes = torch.argmax(test_preds, dim=1)
-    np.save("predictions_mlp.npy", pred_classes.cpu().numpy())
-
-
-
+    np.save("predictions_cnn.npy", pred_classes.cpu().numpy())
 
 
 if __name__ == '__main__':

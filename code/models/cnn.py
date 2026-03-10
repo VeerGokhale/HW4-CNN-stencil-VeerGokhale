@@ -23,15 +23,38 @@ class CNN(CifarModel):
         super(CNN, self).__init__()
 
         # Initialize all hyperparameters
-        self.input_width = ???
-        self.input_height = ???
-        self.image_channels = ???
+        self.input_width = 32
+        self.input_height = 32
+        self.image_channels = 3
         self.num_classes = len(classes)
-        self.hidden_layer_size = 256 # feel free to change this ;)
-        self.batch_size = 256 # feel free to change this ;)
+        self.hidden_layer_size = 128
+        self.batch_size = 64
 
+        # Conv1
+        self.conv1 = nn.Conv2d(
+            in_channels=self.image_channels,
+            out_channels=16,
+            kernel_size=3,
+            stride=1,
+            padding=1
+        )
 
-        # TODO: Initialize your convolutional and linear layers here
+        # Conv2
+        self.conv2 = nn.Conv2d(
+            in_channels=16,
+            out_channels=32,
+            kernel_size=3,
+            stride=1,
+            padding=1
+        )
+
+        # shared layers
+        self.relu = nn.ReLU()
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
+
+        # fc
+        self.fc1 = nn.Linear(32 * 8 * 8, self.hidden_layer_size)
+        self.fc2 = nn.Linear(self.hidden_layer_size, self.num_classes)
 
     def forward(self, inputs):
         """
@@ -40,5 +63,17 @@ class CNN(CifarModel):
         :return: logits, a matrix of shape (num_inputs, num_classes)
         """
 
-        # TODO: Implement your forward pass here
-        raise NotImplementedError("Implement me!")
+        x = self.conv1(inputs)      #(N, 3, 32, 32) --> (N, 16, 32, 32)
+        x = self.relu(x)
+        x = self.pool(x)            #(N, 16, 16, 16)
+
+        x = self.conv2(x)           #(N, 32, 16, 16)
+        x = self.relu(x)
+        x = self.pool(x)            #(N, 32, 8, 8)
+
+        x = torch.flatten(x, start_dim=1)   #(N, 32*8*8)
+        x = self.fc1(x)             #(N, 128)
+        x = self.relu(x)
+        x = self.fc2(x)             #(N, num_classes)
+
+        return x
